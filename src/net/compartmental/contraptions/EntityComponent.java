@@ -12,6 +12,11 @@ public abstract class EntityComponent
     return m_entity;
   }
   
+  public ComponentManager getManager()
+  {
+	  return m_manager;
+  }
+  
   protected float deltaTime()
   {
     return m_manager.deltaTime();

@@ -65,6 +65,11 @@ public class ComponentManager
     return null;
   }
   
+  public ArrayList<EntityComponent> getComponentsOfClass( Class componentClass )
+  {
+	  return m_componentLists.get( componentClass );
+  }
+  
   float deltaTime()
   {
     return m_dt;
