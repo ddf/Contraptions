@@ -17,7 +17,7 @@ public class PTransformComponent extends EntityComponent
   
   public static PTransformComponent Get( Entity e )
   {
-    return (PTransformComponent)e.getComponentByClass( PTransformComponent.class );
+    return e.getComponentByClass( PTransformComponent.class );
   }
  
   public PVector Position()

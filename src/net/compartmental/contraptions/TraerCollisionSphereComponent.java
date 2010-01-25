@@ -27,12 +27,11 @@ public class TraerCollisionSphereComponent extends EntityComponent
 	{
 		// do collision restitution with all the other collision spheres in the system
 		// should we really do this with forces?
-		ArrayList<EntityComponent> tcsComponents = getManager().getComponentsOfClass( this.getClass() );
-		for( EntityComponent comp : tcsComponents )
+		ArrayList<TraerCollisionSphereComponent> tcsComponents = getManager().getComponentsOfClass( TraerCollisionSphereComponent.class );
+		for( TraerCollisionSphereComponent theirCollision : tcsComponents )
 		{
-			if ( comp != this )
+			if ( theirCollision != this )
 			{
-				TraerCollisionSphereComponent theirCollision = (TraerCollisionSphereComponent)comp;
 				TraerParticleComponent ourParticle = TraerParticleComponent.Get( getEntity() );
 				TraerParticleComponent theirParticle = TraerParticleComponent.Get( theirCollision.getEntity() );
 				// unlikely that they'll have a collision component without a particle
@@ -53,8 +52,17 @@ public class TraerCollisionSphereComponent extends EntityComponent
 						bump.multiplyBy(0.1f);
 						theirParticle.Particle().velocity().add( bump );
 						
+            // totally fix the overlap by moving the other guy
 						bump.set( theirParticle.Particle().position() );
 						bump.subtract( ourParticle.Particle().position() );
+            
+            // set the length of the direction vector to the minimum distance allowed
+            // and force the other particle to be that far away from us.
+            bump.multiplyBy( 1.f / bump.length() );
+            bump.multiplyBy( minDist );
+            theirParticle.Particle().position().set( ourParticle.Particle().position() );
+            theirParticle.Particle().position().add( bump );
+            
 						// hell of a way to normalize and set length
 						// TODO: the "get out of me" bump strength should prob 
 						// be proportional to how overlapped they are.

@@ -14,7 +14,7 @@ public class TraerParticleComponent extends EntityComponent
   
   public static TraerParticleComponent Get( Entity e )
   {
-    return (TraerParticleComponent)e.getComponentByClass( TraerParticleComponent.class );
+    return e.getComponentByClass( TraerParticleComponent.class );
   }
   
   public Particle Particle()

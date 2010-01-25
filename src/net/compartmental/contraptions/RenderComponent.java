@@ -16,7 +16,7 @@ public class RenderComponent extends EntityComponent
   
   public static RenderComponent Get( Entity e )
   {
-    return (RenderComponent)e.getComponentByClass( RenderComponent.class );
+    return e.getComponentByClass( RenderComponent.class );
   }
   
   public void update()

@@ -13,7 +13,7 @@ public class Entity
 {
   ComponentManager m_manager;
   
-  public EntityComponent getComponentByClass( Class componentClass )
+  public <T extends EntityComponent> T getComponentByClass( Class<T> componentClass )
   {
     return m_manager.getComponentByClass(this, componentClass);
   }

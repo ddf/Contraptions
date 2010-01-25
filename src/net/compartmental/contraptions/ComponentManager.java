@@ -6,13 +6,13 @@ import java.util.HashMap;
 
 public class ComponentManager
 {
-  private HashMap<Class, ArrayList<EntityComponent>> m_componentLists;
+  private HashMap<Class<?>, ArrayList<? extends EntityComponent>> m_componentLists;
   private long m_lastUpdate;
   private float m_dt;
   
   public ComponentManager()
   {
-    m_componentLists = new HashMap<Class, ArrayList<EntityComponent>>();
+    m_componentLists = new HashMap<Class<?>, ArrayList<? extends EntityComponent>>();
     m_lastUpdate = System.currentTimeMillis();
     m_dt = 0.f;
   }
@@ -24,8 +24,8 @@ public class ComponentManager
     m_dt = (float)longDT / 1000.0f;
     m_lastUpdate = currTime;
     
-    Collection<ArrayList<EntityComponent>> componentLists = m_componentLists.values();    
-    for( ArrayList<EntityComponent>list : componentLists )
+    Collection<ArrayList<? extends EntityComponent>> componentLists = m_componentLists.values();    
+    for( ArrayList<? extends EntityComponent>list : componentLists )
     {
       for( EntityComponent component : list )
       {
@@ -34,12 +34,13 @@ public class ComponentManager
     }
   }
   
-  public void addComponent( Entity theEntity, EntityComponent theComponent )
+  @SuppressWarnings("unchecked")
+  public <T extends EntityComponent> void addComponent( Entity theEntity,  T theComponent )
   {
-    ArrayList<EntityComponent> componentList = m_componentLists.get( theComponent.getClass() );
+    ArrayList<T> componentList = (ArrayList<T>)m_componentLists.get( theComponent.getClass() );
     if ( componentList == null )
     {
-      componentList = new ArrayList<EntityComponent>();
+      componentList = new ArrayList<T>();
       m_componentLists.put( theComponent.getClass(), componentList );
     }
     componentList.add( theComponent );
@@ -48,16 +49,16 @@ public class ComponentManager
     theEntity.m_manager = this;
   }
   
-  public EntityComponent getComponentByClass( Entity theEntity, Class componentClass )
+  public <T extends EntityComponent> T getComponentByClass( Entity theEntity, Class<T> componentClass )
   {
-    ArrayList<EntityComponent> componentList = m_componentLists.get( componentClass );
+    ArrayList<? extends EntityComponent> componentList = m_componentLists.get( componentClass );
     if ( componentList != null )
     {
       for( EntityComponent c : componentList )
       {
         if ( c.m_entity == theEntity )
         {
-          return c; 
+          return componentClass.cast(c); 
         }
       }
     }
@@ -65,9 +66,10 @@ public class ComponentManager
     return null;
   }
   
-  public ArrayList<EntityComponent> getComponentsOfClass( Class componentClass )
+  @SuppressWarnings("unchecked")
+  public <T extends EntityComponent> ArrayList<T> getComponentsOfClass( Class<T> componentClass )
   {
-	  return m_componentLists.get( componentClass );
+	  return (ArrayList<T>)m_componentLists.get( componentClass );
   }
   
   float deltaTime()
