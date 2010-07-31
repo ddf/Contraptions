@@ -74,6 +74,12 @@ public class AnimationSystem
 	public AnimationInstance createAnimationInstance(String animName)
 	{
 	  Animation anim = mAnimations.get(animName);
+	  
+	  if ( anim == null )
+	  {
+		  throw new IllegalArgumentException("Could not find an animation named " + animName + "!");
+	  }
+	  
 	  return new AnimationInstance(anim);
 	}
 }

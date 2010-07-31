@@ -49,6 +49,16 @@ public class AnimationInstance
 		}
 		return false;
 	}
+	
+	public float getCurrentTime()
+	{
+		return m_currentTime;
+	}
+	
+	public float getNormalizedCurrentTime()
+	{
+		return m_currentTime / m_animation.length();
+	}
 
 	// display the animation frame
 	public void draw()
