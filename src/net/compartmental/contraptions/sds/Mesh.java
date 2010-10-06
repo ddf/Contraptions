@@ -30,6 +30,8 @@ public class Mesh
       scale = 1;
       rx = ry = rz = 0;
       wireframe = false;
+      vertices = new Vertex[0];
+      transVerts = new Vertex[0];
     }
     
     public Mesh(Vertex[] vertices, int[] indices, int type)
@@ -67,6 +69,11 @@ public class Mesh
 	{
 	  scale *= s;
 	  transformVertices();
+	}
+	
+	public float getScale()
+	{
+	    return scale;
 	}
 	
 	public void translate(float x, float y, float z)
@@ -145,6 +152,48 @@ public class Mesh
 			transVerts[i] = new Vertex(vt.x, vt.y, vt.z, v.n.x, v.n.y, v.n.z, v.color);
 		}
 	}
+	
+	public void calculateNormals()
+	{
+	    // zero out the normals to prepare for recalcutation
+	    for(int i = 0; i < transVerts.length; ++i)
+	    {
+	        transVerts[i].n.set( 0,0,0 );
+	    }
+	    
+	    int step = type == QUAD ? 4 : 3;
+	    // find the normal of each face and add it into the normal of each vert on the face
+	    for(int i = 0; i < indices.length; i += step)
+	    {
+	        Vertex A = transVerts[ indices[i] ];
+	        Vertex B = transVerts[ indices[i+1] ];
+	        Vertex C = transVerts[ indices[i+2] ];
+
+	        Vector3f axis1 = new Vector3f();
+	        axis1.sub( B.p, A.p );
+	        Vector3f axis2 = new Vector3f();
+	        axis2.sub( C.p, A.p );
+	        
+	        Vector3f faceNormal = new Vector3f();
+	        faceNormal.cross( axis1, axis2 );
+	        faceNormal.normalize();
+	        
+	        A.n.add( faceNormal );
+	        B.n.add( faceNormal );
+	        C.n.add( faceNormal );
+	        
+	        if ( type == QUAD )
+	        {
+	            transVerts[ indices[i+3] ].n.add( faceNormal );
+	        }
+	    }
+	    
+	    // normalize all the normals
+	    for(int i = 0; i < transVerts.length; ++i)
+	    {
+	        transVerts[i].n.normalize();
+	    }
+	}
     
 	public void draw(PApplet p) 
 	{
@@ -168,6 +217,16 @@ public class Mesh
 		  }
 	  }
 	  p.endShape();
+	}
+	
+	public void renderNormals( PApplet p, float length, int color )
+	{
+	    p.stroke( color );
+	    for(int i = 0; i < transVerts.length; ++i)
+	    {
+	        Vertex v = transVerts[i];
+	        p.line( v.p.x, v.p.y, v.p.z, v.p.x + v.n.x * length, v.p.y + v.n.y * length, v.p.z + v.n.z * length );
+	    }
 	}
 	
 	public void drawWireFrame(PApplet p, int c)

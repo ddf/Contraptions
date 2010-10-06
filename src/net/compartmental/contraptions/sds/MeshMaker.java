@@ -13,23 +13,32 @@ public class MeshMaker
   
   public static Mesh makeCube(float dim, int color)
   {
-	Vertex[] verts = new Vertex[] { new Vertex(-1, 1, 1, color),
-                                    new Vertex(1, 1, 1, color),
-                                    new Vertex(1, -1, 1, color), 
-                                    new Vertex(-1, -1, 1, color),  
-                                    new Vertex(-1, 1, -1, color), 
-                                    new Vertex(1, 1, -1, color),  
-                                    new Vertex(1, -1, -1, color),  
-                                    new Vertex(-1, -1, -1, color) }; 
-	int[] inds = new int[] { 0, 1, 2, 3,
-							 4, 5, 6, 7,
-							 1, 5, 6, 2,
-							 0, 4, 7, 3,
-							 4, 5, 1, 0,
-							 7, 6, 2, 3 };
-	Mesh m = new Mesh(verts, inds, Mesh.QUAD);
-	m.scale(dim);
-	return m;
+	return makeBox( dim, dim, dim, color );
+  }
+  
+  public static Mesh makeBox(float xSize, float ySize, float zSize, int color)
+  {
+      float hx = xSize * 0.5f;
+      float hy = ySize * 0.5f;
+      float hz = zSize * 0.5f;
+      Vertex[] verts = new Vertex[] { new Vertex(-hx, hy, hz, color),      // 0
+                                      new Vertex(hx, hy, hz, color),       // 1
+                                      new Vertex(hx, -hy, hz, color),      // 2
+                                      new Vertex(-hx, -hy, hz, color),     // 3
+                                      new Vertex(-hx, hy, -hz, color),     // 4
+                                      new Vertex(hx, hy, -hz, color),      // 5
+                                      new Vertex(hx, -hy, -hz, color),     // 6
+                                      new Vertex(-hx, -hy, -hz, color) };  // 7 
+      
+      int[] inds = new int[] { 0, 3, 2, 1,
+                               4, 5, 6, 7,
+                               1, 2, 6, 5,
+                               0, 4, 7, 3,
+                               4, 0, 1, 5,
+                               7, 6, 2, 3 };
+    
+      Mesh m = new Mesh(verts, inds, Mesh.QUAD);
+      return m;
   }
   
   // this function has been swiped from the PApplet source
