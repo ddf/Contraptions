@@ -47,6 +47,11 @@ public class Vertex
     n.normalize();
   }
   
+  public void setColor( int color )
+  {
+      this.color = color;
+  }
+  
   public boolean equals(Object o)
   {
 	Vertex v = (Vertex)o;
