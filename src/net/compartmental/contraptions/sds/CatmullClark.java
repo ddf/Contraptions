@@ -167,13 +167,13 @@ public class CatmullClark implements SDSTechnique
 	// return the face that shares the edge v0-v1 with currFace
 	private SDSFace getAdjFace(SDSFace currFace, SDSVertex v0, SDSVertex v1)
 	{
-	  PApplet.println("Searching v0 faces. There are: " + v0.faces.size());
+	  //PApplet.println("Searching v0 faces. There are: " + v0.faces.size());
       for (int i = 0; i < v0.faces.size(); i++)
       {
     	SDSFace face = (SDSFace)v0.faces.get(i);
     	// skip the face we know about
     	if ( face == currFace ) continue;
-    	PApplet.println("Searching face verts. There are: " + face.v.length);
+    	//PApplet.println("Searching face verts. There are: " + face.v.length);
     	for (int j = 0; j < face.v.length; j++) 
     	{
 		  if ( face.v[j] == v1 ) return face;	

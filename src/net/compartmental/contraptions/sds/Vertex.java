@@ -47,6 +47,11 @@ public class Vertex
     n.normalize();
   }
   
+  public float mag()
+  {
+      return p.distance( new Point3f(0.f,0.f,0.f) );
+  }
+  
   public void setColor( int color )
   {
       this.color = color;
